@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8" />
+<title>Mail</title>
+<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/styles.css">
+<script type="text/javascript"
+	src="/icons/fontawesome-free-6.6.0-web/js/all.js"></script>
+
+</head>
+<body>
+
+
+	<div class="container-fluid">
+
+
+		<!-- 		<div class="alert alert-success alert-dismissible" role="alert" -->
+		<!-- 			th:if="${mailResp.getStatus().equals('success')}"> -->
+		<!-- 			<span th:text="${mailResp.getMessage()}"></span> -->
+		<!-- 			<button type="button" class="close" data-dismiss="alert" -->
+		<!-- 				aria-label="Close"> -->
+		<!-- 				<span aria-hidden="true">&times;</span> -->
+		<!-- 			</button> -->
+		<!-- 		</div> -->
+
+
+
+		<div class="toast-container position-fixed bottom-0 end-0 p-3">
+			<div id="mailToast" th:if="${mailResp.getStatus().equals('success')}"
+				class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+				<div class="toast-header">
+					<strong class="me-auto">Fox</strong>
+					<button type="button" class="btn-close" data-bs-dismiss="toast"
+						aria-label="Close"></button>
+				</div>
+				<div class="toast-body">
+					<span th:text="${mailResp.getMessage()}"></span>
+				</div>
+			</div>
+		</div>
+
+
+
+
+		<div class="toast-container position-fixed bottom-0 end-0 p-3">
+			<div id="mailToast" th:if="${mailResp.getStatus().equals('error')}"
+				class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+				<div class="toast-header">
+					<strong class="me-auto">Fox</strong>
+					<button type="button" class="btn-close" data-bs-dismiss="toast"
+						aria-label="Close"></button>
+				</div>
+				<div class="toast-body">
+					<span th:text="${mailResp.getMessage()}"></span>
+				</div>
+			</div>
+		</div>
+
+		<script>
+		
+		mailToast = document.getElementById("mailToast");
+		
+		if(mailToast){
+			mailToast.classList.add("show");
+			mailToast.classList.add("text-dark");
+		}
+		
+		</script>
+
+
+		<!-- 			<div id="toast-mail" class="toast-mail align-items-center" -->
+		<!-- 				th:if="${mailResp.getStatus().equals('success')}" role="alert" -->
+		<!-- 				aria-live="assertive" aria-atomic="true"> -->
+		<!-- 				<div class="d-flex"> -->
+		<!-- 					<div class="toast-mail-body"> -->
+		<!-- 						<span th:text="${mailResp.getMessage()}"></span> -->
+		<!-- 					</div> -->
+
+		<!-- 				<button type="button" class="btn-close" data-bs-dismiss="toast-mail" aria-label="Close"></button> -->
+
+		<!-- 				</div> -->
+		<!-- 			</div> -->
+
+	</div>
+
+	<form class="col-md-4 border border-primary" style="margin: 10% auto;"
+		method="post" th:action="@{/mail}">
+
+		<div class="mb-3">
+			<label for="exampleInputEmail1" class="form-label">To </label> <input
+				type="email" class="form-control" name="to" id="exampleInputEmail1"
+				aria-describedby="emailHelp">
+
+		</div>
+		<div class="mb-3">
+			<label for="exampleInputEmail1" class="form-label">Subject </label> <input
+				type="text" class="form-control" name="subject"
+				id="exampleInputEmail1" aria-describedby="emailHelp">
+
+		</div>
+		<div class="mb-3">
+		
+			<textarea rows="10" cols="50" class="form-control"
+				id="exampleInputEmail1" name="body" aria-describedby="emailHelp"></textarea>
+
+
+
+		</div>
+
+
+
+
+		<!-- 			<div class="row"> -->
+
+		<button id="send-btn" type="submit" class="col-md-3 btn btn-primary">Send</button>
+
+		<input type="file" id="file" class="form-control" placeholder="file"
+			name="files" style="display: none;" multiple>
+
+
+
+		<style>
+.btn-link {
+	font-weight: 400;
+	color: #131010;
+	background-color: transparent;
+}
+
+.btn-link:hover {
+	color: red;
+}
+</style>
+		<a id="upload" style="margin: auto auto auto 2%;"> <i
+			class="fa-solid fa-upload btn-link"></i>
+		</a>
+
+
+
+		<!-- 				<button style="margin: auto auto auto 2%;" id="upload" type="button" -->
+		<!-- 					class="btn btn-outline-success"> -->
+		<!-- 					<i class="fa-solid fa-upload"></i> -->
+		<!-- 				</button> -->
+
+		<!-- 			</div> -->
+	</form>
+
+
+	</div>
+
+	<!-- <button type="button" class="btn btn-primary" id="liveToastBtn">Show live toast</button> -->
+
+	<!-- 	<div class="toast-container position-fixed bottom-0 end-0 p-3"> -->
+	<!-- 		<div id="upload" class="toast" role="alert" aria-live="assertive" -->
+	<!-- 			aria-atomic="true"> -->
+	<!-- 			<div class="toast-header"> -->
+	<!-- 				<strong class="me-auto">Warning</strong> -->
+	<!-- 				<button type="button" class="btn-close" data-bs-dismiss="toast" -->
+	<!-- 					aria-label="Close"></button> -->
+	<!-- 			</div> -->
+	<!-- 			<div class="toast-body"></div> -->
+	<!-- 		</div> -->
+	<!-- 	</div> -->
+
+	<div aria-live="polite" aria-atomic="true" class="position-relative">
+
+
+		<div id="toast-container"
+			class="toast-container  position-fixed bottom-0 end-0 p-3"></div>
+
+	</div>
+
+
+	<script type="text/javascript" src="/jquery/jquery-3.7.1.slim.min.js"></script>
+	<script type="text/javascript"
+		src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script>
+	
+	
+
+         
+		const upload = document.getElementById("upload");
+			const file = document.getElementById("file");
+
+			
+			
+			upload.addEventListener(
+			  "click",
+			  (e) => {
+				  	 
+				  console.log(e);
+				  
+				  
+		//	  		const toasts =	document.querySelectorAll(".hide");
+			  		
+			  		//console.log(toasts)
+					
+// 					if(toasts){
+									
+// 					console.log("toasts");
+// 					//console.log(toasts);
+						
+// 						for(let i=0; i < toasts.length; i++){
+// 							console.log("@@");
+// 							toasts[i].remove();
+// 							console.log(toasts[i]);
+							
+// 						}
+						
+// 					} else{
+// 						console.log("toasts not created");
+// 					}
+
+			    if (file) {
+			    	
+			
+			    	file.click();
+			    				    	
+			    	
+				
+			    }
+			    
+			  
+
+			  },
+			  false,
+			);
+			
+			
+			
+			file.addEventListener("click",(e)=>{
+				
+				console.log("clicked");
+				console.log(e);
+				
+				
+			   const toasts =	document.querySelectorAll(".hide");
+		  		
+		  		console.log(toasts)
+				
+					if(toasts){
+								
+					console.log("toasts");					
+						for(let i=0; i < toasts.length; i++){
+							console.log("@@");
+							toasts[i].remove();
+							console.log(toasts[i]);
+						
+						}
+					
+					} else{
+						console.log("toasts not created");
+					}
+			});
+			
+			
+			// listen to input event
+			file.addEventListener("input",
+			  (e) => {
+				  
+				  
+				 // console.log(e);
+
+				  
+				  console.log("photo input block");
+				  console.log("the file");
+				  
+				  var files = e.target.files;
+
+		          console.log(files);
+				  
+
+				  // after loading the files
+				  
+				  
+				  // send to the file scanning server.
+
+				  
+				  startFileExtScanning(files);
+				  
+				  
+			 var aLink =	  document.querySelector(".btn-link:hover");
+			 
+			 
+			  aLink.style.color="#131010"; // default color
+			///aLink.removeAttribute("color");
+			
+			 console.log(aLink);
+				  
+				  
+				  
+				  
+				  
+				  
+				  
+				  
+				  
+				  
+				  
+				  
+				  
+				  
+			  });
+			
+
+			
+			
+			console.log(upload);
+			
+			
+			
+			function getToast(id){
+				
+				 var toastLive = document.createElement("div");
+					toastLive.setAttribute("id","liveToast"+id);
+					toastLive.setAttribute("role","alert");
+					toastLive.setAttribute("aria-live","assertive");
+					toastLive.setAttribute("aria-atomic","true");
+					toastLive.classList.add("toast");					
+					toastLive.classList.add("bg-danger"); //text-warning-emphasis
+					toastLive.classList.add("text-white"); //text-warning-emphasis
+					  
+					
+				   var	toastHeader = document.createElement("div");
+				   toastHeader.classList.add("toast-header");
+				   
+				   var closeToastBtn = document.createElement("button");
+				   closeToastBtn.setAttribute("type","button");
+				   closeToastBtn.setAttribute("data-bs-dismiss","toast");
+				   closeToastBtn.setAttribute("aria-label","Close");
+				   closeToastBtn.classList.add("btn-close");
+				   
+				   var toastHeaderTitle = document.createElement("strong");
+				   toastHeaderTitle.classList.add("me-auto");
+				   toastHeaderTitle.innerHTML="Fox";
+// 				    <strong class="me-auto">Bootstrap</strong>				   
+				   toastHeader.append(toastHeaderTitle);
+				   toastHeader.append(closeToastBtn);
+				   
+				   var toastBodyText = document.createElement("div");
+				   toastBodyText.setAttribute("id","toast-body-text"+id);
+				   toastBodyText.classList.add("toast-body");  // text-bg-primary
+				   
+				   
+				   toastLive.append(toastHeader);
+				   toastLive.append(toastBodyText);
+				   
+				   return toastLive;
+				   
+				   
+					
+			}
+				
+			
+
+			
+			
+			function startFileExtScanning(files)
+			{
+				
+				
+	
+				
+			
+				const xhttpr = new XMLHttpRequest();
+				
+				let fileScanServerURL = 'http://localhost:8089/api/files'
+				let postFilesEndpoint = fileScanServerURL + "/scan";
+
+			    console.log(postFilesEndpoint);
+
+				  var formData = new FormData();
+				  
+				  
+					for(var i = 0; i < files.length; i++){
+						
+						  formData.append("files", files[i]);
+					}
+					
+// 					const toastTrigger = document.getElementById('upload')
+// 					const toastLiveExample = document.getElementById('liveToast')
+//                     var toastBootstrap;
+					
+
+			xhttpr.open('POST', postFilesEndpoint,true);
+				            
+			            
+			xhttpr.send(formData);
+			xhttpr.onload = ()=> {
+				
+			var response;
+			  if (xhttpr.status === 200) {
+			  
+
+			  
+			      console.log("200");
+			      console.log(xhttpr);
+			      serverResponse = JSON.parse(xhttpr.response);
+			      console.log(serverResponse)
+				  console.log(serverResponse)
+					
+				  
+				  if(serverResponse.status==="SCANNING"){
+					  
+					 console.log("files status is " + serverResponse.status) 
+					 
+	                   // scan/notification?requestId=FSC189710
+	                    const requestId = serverResponse.requestId;
+	 					let notificationEndpoint = fileScanServerURL + "/scan/notification?requestId="+requestId;
+	 					console.log(notificationEndpoint);
+	 					const evtSource = new EventSource(notificationEndpoint);
+						
+	 					console.log(evtSource);
+						
+	 					
+	 					const filesCount = serverResponse.response.length;
+	 					
+	 					console.log(filesCount);
+						
+	 				    let txLength = 0; 
+	 				    
+	 				   const toastTrigger = document.getElementById('upload')
+// 						var toastLiveExample = getToast(txLength);
+// 						const toastContainer = document.getElementById('toast-container')
+						
+// 						toastContainer.append(toastLiveExample);
+
+
+
+
+	 					
+	 					evtSource.onmessage = (e) =>{
+							
+							console.log("emitting");
+							
+							console.log(e.data);
+							console.log(e.data.toUpperCase());
+							
+							
+							if(e.data.toUpperCase().includes("UNACCEPTABLE")){
+								
+								// you cannot send file
+								document.getElementById("send-btn").setAttribute("disabled",true);
+								
+							}
+							
+if(e.data.toUpperCase().includes("DOES NOT SUPPORT")){
+								
+								// you cannot send file
+								document.getElementById("send-btn").setAttribute("disabled",true);
+								
+							}
+							
+							
+									if (toastTrigger) {
+										
+										
+								var toastLiveExample =	getToast(txLength);
+								const toastContainer = document.getElementById('toast-container');
+		 						toastContainer.append(toastLiveExample);
+
+							  const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+							 
+// 							  console.log("toastBootstrap");
+							  console.log(toastBootstrap);
+							  
+							  const toastBody = document.getElementById("toast-body-text"+txLength);
+							  
+							  console.log(toastBody);
+							  
+							  toastBody.innerHTML = e.data; // set file server notification message.
+							  
+							  toastContainer.append(toastLiveExample);
+
+							
+							    toastBootstrap.show();
+							    
+							  
+							
+							  
+// 							    console.log("@@@@@@@@@@@@@@@@@@@@@@@");
+// 							  console.log(toastLiveExample);
+							  
+						  console.log(toastContainer);
+
+							 
+							}
+
+							console.log(txLength);
+							
+// 							if (toastTrigger) {
+								
+// 								  console.log(bootstrap.Toast);
+// 								   toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+// 								  toastTrigger.addEventListener('click', () => {
+// 									    toastBootstrap.show()
+// 								  })
+// 								}
+							
+
+							++txLength;
+		 					if(filesCount === txLength ){
+								console.log("close notification channel");
+								evtSource.close();
+								document.getElementById("")
+							}
+	 					//	console.log(e.data);
+	 					
+	 				
+	 					};
+	 					
+	 					evtSource.onerror = (err) => {
+	 						  console.error("EventSource failed:", err);
+	 						 evtSource.close();
+	 						};
+
+						
+				  }
+			
+
+
+			}else{
+				
+				 
+			      console.log("00");
+			      console.log(xhttpr);
+			     
+			}
+			
+			
+			  
+
+			};
+			
+			xhttpr.onloadend = () =>{
+				
+				console.log("end");
+				
+				
+				//console.log(xhttpr);
+				console.log(xhttpr.getAllResponseHeaders())
+
+
+				
+			}
+			
+			}
+			
+			
+         
+         </script>
+
+
+
+
+
+	<script type="text/javascript"
+		src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
+</body>
+</html>
