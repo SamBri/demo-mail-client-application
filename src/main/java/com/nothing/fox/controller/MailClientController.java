@@ -1,9 +1,10 @@
-package com.nothing.fox;
+package com.nothing.fox.controller;
 
 import java.io.File;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.nothing.fox.utils.EmailServer;
+import com.nothing.fox.mail.ImailService;
+import com.nothing.fox.response.MailResponse;
+//import com.nothing.fox.utils.GmailSmtpMailServer;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +23,27 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MailClientController {
 	
+  //	@Autowired
+  //	GmailSmtpMailServer gmailSmtpMailServer; // one solution to send mail - SMTP server.
+	                                         // use public mail api - mail gateway.
+	                                         // use gmail api - speak via smtp server
+	                                         // your own mail server. -- smtp server -- @organization.com
+	
+//	@Autowired
+//	PublicMailServer publicMailServer;
+//	
+//	@Autowired 
+//	GmailAPIService gmailApiService;
+	
+	ImailService mailServer; // using LSP & Extensiblity & modularity & maintain & flexible
+	
 	@Autowired
-	EmailServer emailServer;
+	public MailClientController(@Qualifier("gmailApiServer")ImailService mailServer) {
+		this.mailServer = mailServer;
+	}
+	
+	
+	
 
 	@RequestMapping("/")
 	public String goToLoginPage(HttpServletRequest req) {
@@ -50,7 +72,7 @@ public class MailClientController {
 	public RedirectView sendMail(@RequestParam(name = "files", required = true) List<String> files,
 			RedirectAttributes reqAtt, HttpServletRequest request) {
 
-		log.info("@@@ inside sendMail  ");
+		log.info("@@@ inside sendMail ");
 
 		files.forEach(e -> log.info(e));
 
@@ -62,7 +84,7 @@ public class MailClientController {
 		String body =  (String) request.getParameter("body");
 
 		try {
-			emailServer.sendEmail(to, subject, body);
+			mailServer.sendEmail(to, subject, body);
 			mailResponse = new MailResponse("success", "mail sent");
 
 		} catch (Exception e2) {

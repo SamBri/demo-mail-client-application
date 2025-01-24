@@ -1,4 +1,4 @@
-package com.nothing.fox.utils;
+package com.nothing.fox.mail.impl;
 
 import java.util.Date;
 import java.util.Properties;
@@ -17,31 +17,33 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import com.nothing.fox.mail.ImailService;
+
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 
+ * @author codefilms sending mail via GmailSmtpServer
+ *
+ */
+
 @Slf4j
-@Component
-public class EmailServer {
+@Component("gmailSmtpServer")
+public class GmailSmtpMailServer implements ImailService {
 
 	final static String fromEmail = "lunarhive@gmail.com"; // requires valid gmail id
 	final static String password = "4thjan2024@#$"; // correct password for gmail id
 
-
 	@Value("${mail.smtp.host}")
-	private  String mailServer;
+	private String mailServer;
 	@Value("${mail.smtp.port}")
-	private  String mailPort;
+	private String mailPort;
 	@Value("${mail.smtp.auth}")
-	private  String allowAuth;
+	private String allowAuth;
 	@Value("${mail.smtp.starttls.enable}")
-	private  String allowTls;
+	private String allowTls;
 
-	
-	
-	
-
-
-	private  Properties prepareProperties() {
+	private Properties prepareProperties() {
 		Properties props = new Properties();
 
 		log.info("mail.smtp.host :: {}", mailServer);
@@ -53,12 +55,12 @@ public class EmailServer {
 		props.put("mail.smtp.port", mailPort); // TLS Port
 		props.put("mail.smtp.auth", allowAuth); // enable authentication
 		props.put("mail.smtp.starttls.enable", allowTls); // enable STARTTLS
-		props.put("mail.smtp.socketFactory.port", mailPort); //SSL Port
-		props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory"); //SSL Factory Class
-			return props;
+		props.put("mail.smtp.socketFactory.port", mailPort); // SSL Port
+		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory"); // SSL Factory Class
+		return props;
 	}
 
-	private  Authenticator prepareAuthentication() {
+	private Authenticator prepareAuthentication() {
 
 		// create Authenticator object to pass in Session.getInstance argument
 		Authenticator auth = new Authenticator() {
@@ -80,8 +82,13 @@ public class EmailServer {
 	 * @param subject
 	 * @param body
 	 */
-	public  void sendEmail(String toEmail, String subject, String body) {
+	public void sendEmail(String toEmail, String subject, String body) {
+
 		Session session = Session.getInstance(prepareProperties(), prepareAuthentication());
+
+		log.info("inside sendEmail");
+
+		log.info("toEmail = {} , subject = {} , body = {}",toEmail,subject,body);
 
 		try {
 			MimeMessage msg = new MimeMessage(session);
