@@ -1,4 +1,4 @@
-package com.nothing.fox;
+package com.nothing.fox.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
