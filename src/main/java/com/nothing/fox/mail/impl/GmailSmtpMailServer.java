@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 @Slf4j
-@Component("gmailSmtpServer")
+@Component("gmailSmtpServer") // Gmail Smtp Mail Server
 public class GmailSmtpMailServer implements ImailService {
 
 	final static String fromEmail = "lunarhive@gmail.com"; // requires valid gmail id

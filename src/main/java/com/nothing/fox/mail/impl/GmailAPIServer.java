@@ -7,7 +7,7 @@ import com.nothing.fox.mail.ImailService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Component("gmailApiServer")
+@Component("gmailApiServer") // Gmail API server
 public class GmailAPIServer implements ImailService {
 
 	@Override

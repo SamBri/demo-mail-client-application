@@ -8,7 +8,7 @@ import com.nothing.fox.mail.ImailService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Component("publicEmailApiServer")
+@Component("publicEmailApiServer")  // Public Email API Server
 public class PublicEmailAPIServer implements ImailService {
 
 	@Value("${mail.provider}")
